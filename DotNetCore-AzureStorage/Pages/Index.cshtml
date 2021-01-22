@@ -1,0 +1,21 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <form method="post">
+        Storage Account Connection String Name:
+        <input asp-for="storageAccountConnectionString" />
+        Storage Container Name:
+        <input asp-for="containerName" />
+        <input type="submit" />
+    </form>
+</div><br>
+<div class="text-center">
+    <p>Storage Account Host Name: @Model.storageReturn.hostName</p>
+    <p>Storage Account IP: @Model.storageReturn.nsLookupIp</p>
+    <p>Blob Name: @Model.storageReturn.name</p>
+    <p>Blob Access Tier: @Model.storageReturn.accessTier</p>
+</div>
