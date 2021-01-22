@@ -27,6 +27,7 @@ namespace DotNetCore_AzureStorage.Pages
         public string containerName {get;set;}
 
         public returnObject storageReturn {get;set;}
+        public string error {get;set;}
         private readonly ILogger<IndexModel> _logger;
 
         public IndexModel(ILogger<IndexModel> logger)
@@ -42,13 +43,19 @@ namespace DotNetCore_AzureStorage.Pages
 
         public void OnPost()
         {
-            BlobContainerClient client= new BlobContainerClient(storageAccountConnectionString,containerName);
-            BlobItem items = client.GetBlobs(BlobTraits.All, BlobStates.All).First();
-            IPHostEntry resolver = Dns.GetHostEntry(storageAccountConnectionString.Split("AccountName=")[1].Split(";")[0] + ".blob.core.windows.net");
-            storageReturn.name = items.Name;
-            storageReturn.accessTier = items.Properties.AccessTier.ToString();
-            storageReturn.hostName = storageAccountConnectionString.Split("AccountName=")[1].Split(";")[0] + ".blob.core.windows.net";
-            storageReturn.nsLookupIp = resolver.AddressList.First().ToString();
+            try {
+                BlobContainerClient client= new BlobContainerClient(storageAccountConnectionString,containerName);
+                BlobItem items = client.GetBlobs(BlobTraits.All, BlobStates.All).First();
+                IPHostEntry resolver = Dns.GetHostEntry(storageAccountConnectionString.Split("AccountName=")[1].Split(";")[0] + ".blob.core.windows.net");
+                storageReturn.name = items.Name;
+                storageReturn.accessTier = items.Properties.AccessTier.ToString();
+                storageReturn.hostName = storageAccountConnectionString.Split("AccountName=")[1].Split(";")[0] + ".blob.core.windows.net";
+                storageReturn.nsLookupIp = resolver.AddressList.First().ToString();
+            }
+            catch (Exception e)
+            {
+                error = e.Message;
+            }            
         }
     }
 }
